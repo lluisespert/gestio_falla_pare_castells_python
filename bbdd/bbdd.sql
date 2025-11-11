@@ -1,0 +1,34 @@
+CREATE DATABASE IF NOT EXISTS pare_castells;
+USE pare_castells;
+
+CREATE TABLE IF NOT EXISTS fallers (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nom VARCHAR(100) NOT NULL,
+  cognoms VARCHAR(100) NOT NULL,
+  domicili VARCHAR(200) NOT NULL,
+  telefon VARCHAR(15) NOT NULL,
+  dni VARCHAR(15) NOT NULL UNIQUE,
+  data_naixement DATE NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  edat INT NOT NULL,
+  `grup` VARCHAR(100) NOT NULL DEFAULT '',
+  colaborador TINYINT(1) NOT NULL DEFAULT 0,
+  data_alta DATE NOT NULL,
+  categoria VARCHAR(20) NOT NULL DEFAULT 'Home'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS pagaments (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  id_faller INT NOT NULL,
+  comentaris VARCHAR(500) NOT NULL,
+  quantitat DECIMAL(10,2) NOT NULL,
+  data_pagament DATE NOT NULL,
+  metode_pagament VARCHAR(20) NOT NULL,
+  total_pagament DECIMAL(10,2) NOT NULL,
+  aportat_pagament DECIMAL(10,2) NOT NULL,
+  falta_per_aportar DECIMAL(10,2) NOT NULL,
+  data_aportacio DATE NOT NULL,
+  CONSTRAINT fk_pag_faller
+    FOREIGN KEY (id_faller) REFERENCES fallers(id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
