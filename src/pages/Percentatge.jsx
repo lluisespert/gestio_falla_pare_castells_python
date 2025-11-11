@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
 
 export default function Percentatge() {
   const navigate = useNavigate();
@@ -16,8 +17,7 @@ export default function Percentatge() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-        const res = await fetch(`${API_BASE}/src/controller/percentatge.php`);
+        const res = await fetch(API_ENDPOINTS.percentatge);
         
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);

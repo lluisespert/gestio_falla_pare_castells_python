@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
 
 export default function Editar_faller() {
   const { id } = useParams();
@@ -27,8 +28,7 @@ export default function Editar_faller() {
   useEffect(() => {
     const load = async () => {
       try {
-        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-        const res = await fetch(`${API_BASE}/src/controller/obtenir_faller.php?id=${encodeURIComponent(id)}`);
+        const res = await fetch(API_ENDPOINTS.getFaller(id));
         const text = await res.text();
         let data;
         try { data = JSON.parse(text); } catch { throw new Error('Resposta no JSON: ' + text.slice(0, 400)); }
@@ -81,8 +81,7 @@ export default function Editar_faller() {
         edat: form.edat === '' ? null : Number(form.edat),
         colaborador: form.grup === 'Col.laborador' ? 1 : 0
       };
-      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-      const res = await fetch(`${API_BASE}/src/controller/modificar_faller.php`, {
+      const res = await fetch(API_ENDPOINTS.updateFaller(id), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

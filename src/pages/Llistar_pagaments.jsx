@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
 
 export default function Llistar_pagaments() {
   const navigate = useNavigate();
@@ -16,8 +17,7 @@ export default function Llistar_pagaments() {
   useEffect(() => {
     const loadPagaments = async () => {
       try {
-        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-        const res = await fetch(`${API_BASE}/src/controller/llista_pagaments.php`);
+        const res = await fetch(API_ENDPOINTS.pagaments);
         
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
@@ -86,8 +86,15 @@ export default function Llistar_pagaments() {
   // Convertir a array
   const pagamentsAgrupatsList = Object.values(pagamentsAgrupats);
 
-  // Calcular total quantitat de TODOS los pagos (sin filtrar)
-  const totalQuantitat = pagaments.reduce((sum, p) => sum + parseFloat(p.quantitat || 0), 0);
+  // Calcular total quantitat: suma del total_pagament de cada faller único
+  // Esto representa la suma total de las cuotas de todos los fallers (según su grupo)
+  const fallersUnicsTotal = {};
+  pagaments.forEach(p => {
+    if (!fallersUnicsTotal[p.id_faller]) {
+      fallersUnicsTotal[p.id_faller] = parseFloat(p.total_pagament || 0);
+    }
+  });
+  const totalQuantitat = Object.values(fallersUnicsTotal).reduce((sum, total) => sum + total, 0);
   
   // Calcular total aportado: suma de todas las cantidades de los pagos filtrados
   const totalAportat = pagamentsFiltrats.reduce((sum, p) => sum + parseFloat(p.quantitat || 0), 0);

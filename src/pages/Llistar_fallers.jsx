@@ -3,6 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
+
+// Función para formatear fechas de YYYY-MM-DD a DD/MM/YYYY
+const formatDate = (dateString) => {
+  if (!dateString) return '';
+  const [year, month, day] = dateString.split('-');
+  return `${day}/${month}/${year}`;
+};
 
 export default function Llistar_fallers() {
   const navigate = useNavigate();
@@ -12,8 +20,7 @@ export default function Llistar_fallers() {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-    const url = `${API_BASE}/src/controller/llista_fallers.php?format=json`;
+    const url = API_ENDPOINTS.fallers;
     let mounted = true;
 
     (async () => {
@@ -218,7 +225,7 @@ export default function Llistar_fallers() {
                       <td>{r.domicili}</td>
                       <td>{r.telefon}</td>
                       <td>{r.dni}</td>
-                      <td>{r.data_naixement}</td>
+                      <td>{formatDate(r.data_naixement)}</td>
                       <td>{r.email}</td>
                       <td>{r.edat ?? ''}</td>
                       <td>{r.grup}</td>
@@ -235,7 +242,7 @@ export default function Llistar_fallers() {
                       <td>
                         <span className={`badge ${r.colaborador ? 'yes' : 'no'}`}>{r.colaborador ? 'Sí' : 'No'}</span>
                       </td>
-                      <td>{r.data_alta}</td>
+                      <td>{formatDate(r.data_alta)}</td>
                       <td className="row-actions" style={{ whiteSpace: 'nowrap', position: 'relative', zIndex: 100 }}>
                         <button 
                           type="button" 

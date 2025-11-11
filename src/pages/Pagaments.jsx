@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
 
 export default function Pagaments() {
   const navigate = useNavigate();
@@ -24,8 +25,7 @@ export default function Pagaments() {
   useEffect(() => {
     const loadFallers = async () => {
       try {
-        const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-        const res = await fetch(`${API_BASE}/src/controller/llista_fallers.php?format=json`);
+        const res = await fetch(API_ENDPOINTS.fallers);
         const text = await res.text();
         const data = JSON.parse(text);
         if (!data.success) throw new Error(data.message || 'Error al cargar fallers');
@@ -57,8 +57,7 @@ export default function Pagaments() {
   const loadFallerInfo = async (id_faller) => {
     setLoadingInfo(true);
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-      const res = await fetch(`${API_BASE}/src/controller/info_faller_pagament.php?id_faller=${id_faller}`);
+      const res = await fetch(API_ENDPOINTS.infoFallerPagament(id_faller));
       const text = await res.text();
       const data = JSON.parse(text);
       if (!data.success) throw new Error(data.message || 'Error al cargar informació del faller');
@@ -165,8 +164,7 @@ export default function Pagaments() {
     };
 
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-      const url = `${API_BASE}/src/controller/insertar_pagament.php`;
+      const url = API_ENDPOINTS.createPagament;
 
       const res = await fetch(url, {
         method: 'POST',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../estilos/estilos.css';
+import API_ENDPOINTS from '../config/api';
 
 export default function Donar_alta_fallers() {
   const navigate = useNavigate();
@@ -51,8 +52,7 @@ export default function Donar_alta_fallers() {
     };
 
     try {
-      const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost/gestio_falla_pare_castells';
-      const url = `${API_BASE}/src/controller/insertar_fallers.php`;
+      const url = API_ENDPOINTS.createFaller;
 
       const res = await fetch(url, {
         method: 'POST',
